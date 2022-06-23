@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  font-family: "Open Sans", sans-serif;
+  word-break: break-word;
+}
+
+:root {
+  --bg-body: #DEDEDE;
+  --page-width: 700px;
+  --size-bubble: 400px;
+
+  --bg-primary: #4971a4;
+  --bg-light: white;
+}
+
+body {
+  background: var(--bg-body);
+}
+
+hr {
+  margin-bottom: 1em;
+  margin-top: 5em;
+
+  background: black;
+  opacity: 15%;
+}
