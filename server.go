@@ -20,7 +20,7 @@ type Server struct {
     // And wants access to the current message history
     messageHistory []Message
 
-    // Maximum limi of message history storage
+    // Maximum limit of message history storage
     // If it passes the limit, it will pop out the oldest message
     historyLimit int
 }
@@ -40,13 +40,13 @@ func (s *Server) HandleConnection(w http.ResponseWriter, r *http.Request) {
     // Client username will be found in the url parameters of the request
     usernames, ok := r.URL.Query()["username"]
 
-    // Check if the username is valud
+    // Check if the username is valid
     if !ok || usernames[0] == "Server" {
         log.Println("Username is invalid or missing!")
         return 
     }
 
-    // Try to upgrade to connection to a websocket
+    // Try to upgrade the connection to a websocket
     connection, err := upgrader.Upgrade(w, r, nil)
 
     if err != nil {
@@ -78,7 +78,7 @@ func (s *Server) HandleConnection(w http.ResponseWriter, r *http.Request) {
 }
 
 // Executes when a new connection is established
-// It sends the message history to the new client and writes a new server message to the chat
+// Provides the message history to the new client and broadcasts a new welcome message
 func (s *Server) HandleLoad(client *Client) {
     // Send message history to client
     client.ReceiveJSON(s.messageHistory)
@@ -109,7 +109,7 @@ func (s *Server) HandleMessage(client *Client, message string) {
 }
 
 // Handles the disconnection of a client
-// Will send a server message that the user has left the chat
+// Will send a server message indicating that the user has left the chat
 func (s *Server) HandleDisconnect(client *Client) {
     message := Message {
         Author: "Server",
@@ -121,7 +121,7 @@ func (s *Server) HandleDisconnect(client *Client) {
     s.BroadcastJSON(&message)
 }
 
-// Broadcasts marshaled json data to all server clients
+// Broadcasts JSON data to all server clients
 func (s *Server) BroadcastJSON(data interface{}) {
     for client, _ := range(s.clients) {
         
@@ -133,7 +133,8 @@ func (s *Server) BroadcastJSON(data interface{}) {
 func (s *Server) UpdateHistory(message Message) {
     
     if len(s.messageHistory) > s.historyLimit {
-        // Remove oldest element of history
+        
+        // Remove oldest message
         s.messageHistory = s.messageHistory[1:]
     }
 
